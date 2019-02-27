@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TetrisSupport</name>
+    </assembly>
+    <members>
+        <member name="F:TetrisSupport.ConstData.ColorCount">
+            <summary>
+            颜色数量(不包括灰色),这个数不能超过7,整个地图消息二进制化时认定颜色总种类不超过8种
+            </summary>
+        </member>
+        <member name="F:TetrisSupport.Shape.ProductType.TurnByLastOne">
+            <summary>
+            根据前一个索引逆时针旋转90度
+            </summary>
+        </member>
+        <member name="F:TetrisSupport.Shape.ProductType.TurnThenClone">
+            <summary>
+            第1个通过旋转第0个获得，然后第2个克隆第0个，第3个克隆第1个
+            </summary>
+        </member>
+        <member name="F:TetrisSupport.Map.ColumnCount">
+            <summary>
+            地图总列数,这个不能随便改,整个地图消息二进制化时认定一行最多10个
+            </summary>
+        </member>
+        <member name="T:TetrisSupport.CellInfo">
+            <summary>
+            单元格信息，None表示格子没有被占用
+            </summary>
+        </member>
+        <member name="T:TetrisSupport.Position">
+            <summary>
+            一个坐标逆时针旋转90度，相当于x放在y的位置，y取相反数放在x的位置
+            </summary>
+        </member>
+    </members>
+</doc>

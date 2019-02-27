@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MyNetManager</name>
+    </assembly>
+    <members>
+        <member name="T:MyNetManager.AsyncLinker">
+            <summary>
+            连接对象
+            </summary>
+        </member>
+        <member name="F:MyNetManager.AsyncLinker._input">
+            <summary>
+            接收数据的二进制数组,接受线程会向其中写入数据,主线程会读取其中数据,但是二者永远不会同时进行,所以不会有线程安全问题
+            _socket.BeginReceive(...)是在主线程还没有进行读取数据,或者主线程读取数据操作完毕才调用的,而主线程读取数据又是在_socket.BeginReceive(...)
+            的回调之后,加入_actions队列,在主线程调用的,所以对于_input的读写行为是没有交集的
+            </summary>
+        </member>
+        <member name="F:MyNetManager.AsyncLinker._sendingFlag">
+            <summary>
+            是否正在发送消息的标志位,保证始终都只有一个线程会从_sendStream中取数据发送
+            </summary>
+        </member>
+        <member name="F:MyNetManager.AsyncLinker._receiveStream">
+            <summary>
+            接受数据使用的流对象,对这个对象的所有操作均在主线程进行,
+            不同的Linker对象不能使用同一个Stream,因为一次Receive可能接受到的信息不全,
+            导致Stream中依然存在有用数据,要和本Link后续Receive的数据拼接解析才会正常解析
+            如果不同Linker对象同时向一个Stream内写数据,会导致互相污染,_sendStream同理
+            </summary>
+        </member>
+        <member name="F:MyNetManager.AsyncLinker._sendStream">
+            <summary>
+            发送数据使用的流对象,对这个对象的所有操作均在主线程进行,
+            </summary>
+        </member>
+        <member name="M:MyNetManager.AsyncLinker.Tick(System.Object)">
+            <summary>
+            进行一次Tick,会调用已经还没有处理协议的处理方法,会执行一些从通信线程添加到主线程的一些Action
+            Action1(一次数据接收行为结束的处理): 将收到的数据转为协议对象,并添加到协议对象队列,同时进行下一次的BeginReceive
+            Action2(一次数据发送行为结束的处理): 依然有还没发送完毕的数据,则进行下一次发送行为
+            </summary>
+        </member>
+        <member name="T:MyNetManager.ClientNetManager">
+            <summary>
+            客户端网络管理类
+            </summary>
+        </member>
+        <member name="M:MyNetManager.ClientNetManager.Regist(System.Type,System.Int32)">
+            <summary>
+            注册协议对象和Id,要保证和服务器注册的类型与Id匹配关系一致
+            </summary>
+            <param name="type"></param>
+            <param name="typeId"></param>
+        </member>
+        <member name="M:MyNetManager.ClientNetManager.Connect(System.String,System.Int32,System.Int32,System.Int32,System.Action{System.Boolean},System.Boolean)">
+            <summary>
+            连接到对应主机
+            </summary>
+            <param name="host"></param>
+            <param name="port"></param>
+            <param name="sendBufferSize"></param>
+            <param name="receiveBufferSize"></param>
+            <param name="useAsyncSocket">true: 使用异步发送和接受, false:另开线程同步发送</param>
+        </member>
+        <member name="M:MyNetManager.ClientNetManager.SendMsg(MyNetManager.IProtocol)">
+            <summary>
+            发送一个协议对象到服务器
+            </summary>
+            <param name="proto"></param>
+        </member>
+        <member name="M:MyNetManager.ClientNetManager.Tick">
+            <summary>
+            进行一次Tick
+            </summary>
+            <param name="delta"></param>
+        </member>
+        <member name="T:MyNetManager.SerializeControl">
+            <summary>
+            序列化控制类,可序列化的对象必须实现IProtocol接口,使用时要先注册Type和Id的对应关系,
+            目前基本类型支持byte,int,float,string,自定义结构(实现ISerObj接口)和数组(内部可以放基本结构,也可以放自定义结构,暂不支持数组中放数组int[][]和多维数组int[,])
+            </summary>  
+        </member>
+        <member name="M:MyNetManager.SerializeControl.Regist(System.Type,System.Int32)">
+            <summary>
+            注册类型和类型Id的对应关系
+            </summary>
+            <param name="type"></param>
+            <param name="typeId"></param>
+        </member>
+        <member name="M:MyNetManager.SerializeControl.Serialize(MyNetManager.MyStream,MyNetManager.IProtocol)">
+            <summary>
+            序列化
+            </summary>
+            <param name="target">序列化目标</param>
+        </member>
+        <member name="M:MyNetManager.SerializeControl.Deserialize(MyNetManager.MyStream,System.Collections.Generic.Queue{MyNetManager.IProtocol})">
+            <summary>
+            将一个byte数组反序列化为一组IProtocol对象
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MyNetManager.SerializeControl._Deserialize(MyNetManager.MyStream,System.Type)">
+            <summary>
+            根据类型反序列化,会通过反射创建对象,并将其返回
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MyNetManager.SerializeControl.AddClass(System.Type)">
+            <summary>
+            添加需要被序列化的对象类型
+            </summary>
+            <param name="type"></param>
+        </member>
+        <member name="F:MyNetManager.SerializeControl.SerializeBase.Field">
+            <summary>
+            需要被序列化的字段所在的属性,如果为null,则target就是要序列化的值
+            </summary>
+        </member>
+        <member name="F:MyNetManager.NetExceptionType.Connect">
+            <summary>
+            连接异常
+            </summary>
+        </member>
+        <member name="F:MyNetManager.NetExceptionType.Receive">
+            <summary>
+            接受数据异常
+            </summary>
+        </member>
+        <member name="F:MyNetManager.NetExceptionType.Send">
+            <summary>
+            发送异常
+            </summary>
+        </member>
+        <member name="F:MyNetManager.NetExceptionType.Alive">
+            <summary>
+            长时间没心跳
+            </summary>
+        </member>
+        <member name="F:MyNetManager.NetExceptionType.OtherSideClose">
+            <summary>
+            对方关闭Socket
+            </summary>
+        </member>
+        <member name="F:MyNetManager.NetExceptionType.Deserialize">
+            <summary>
+            反序列化异常
+            </summary>
+        </member>
+        <member name="M:MyNetManager.MyStream.ReCalculatePosition(System.Int32)">
+            <summary>
+            根据指定的增加长度重新计算Position
+            </summary>
+            <param name="addLength"></param>
+        </member>
+        <member name="P:MyNetManager.MyStream.CanAnalyse">
+            <summary>
+            流是否可以用于解析(至少有一个类型(4字节)和长度标志位(4字节)才可以解析)
+            </summary>
+        </member>
+        <member name="P:MyNetManager.MyStream.RemainCount">
+            <summary>
+            流内剩余没有被解析的数据长度
+            </summary>
+        </member>
+        <member name="F:MyNetManager.MyOctets.maxSize">
+            <summary>
+            Datas超过这个长度,则下次EraseAndCompact时会重新计算尺寸
+            </summary>
+        </member>
+        <member name="M:MyNetManager.MyOctets.WriteProtocolLength(System.Int32,System.Int32)">
+            <summary>
+            专门为写入协议长度提供的方法,因为协议长度不能提前知道
+            要写入完毕才能知道,所以提供此方法
+            </summary>
+        </member>
+        <member name="M:MyNetManager.MyOctets.ReCalculateCount(System.Int32)">
+            <summary>
+            根据Stream的Position重新计算Count
+            </summary>
+            <returns>是否发生重新计算</returns>
+        </member>
+        <member name="F:MyNetManager.ThdLinker._sendTransitOct">
+            <summary>
+            发送中转数据,主线程将要发送的添加进来,发送线程将其取到发送流
+            </summary>
+        </member>
+        <member name="F:MyNetManager.ThdLinker._sendBuffer">
+            <summary>
+            发送流,只有发送线程会访问
+            </summary>
+        </member>
+    </members>
+</doc>
