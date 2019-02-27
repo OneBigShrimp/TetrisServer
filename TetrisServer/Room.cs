@@ -40,29 +40,29 @@ namespace TetrisServer
 
         void Regist()
         {
-            ServerNetManager.Instance.Regist(typeof(CPlayerReady), 1);
-            ServerNetManager.Instance.Regist(typeof(CChangeTeam), 3);
-            ServerNetManager.Instance.Regist(typeof(CPutShape), 4);
-            ServerNetManager.Instance.Regist(typeof(CUseItem), 5);
-            ServerNetManager.Instance.Regist(typeof(CReqFailure), 6);
-            ServerNetManager.Instance.Regist(typeof(CSetName), 7);
+            ServerNetManager.Instance.Regist(typeof(CPlayerReady));
+            ServerNetManager.Instance.Regist(typeof(CChangeTeam));
+            ServerNetManager.Instance.Regist(typeof(CPutShape));
+            ServerNetManager.Instance.Regist(typeof(CUseItem));
+            ServerNetManager.Instance.Regist(typeof(CReqFailure));
+            ServerNetManager.Instance.Regist(typeof(CSetName));
 
-            
-            ServerNetManager.Instance.Regist(typeof(SEnter), 20);
-            ServerNetManager.Instance.Regist(typeof(SAddPlayer), 21);
-            ServerNetManager.Instance.Regist(typeof(SChangeTeam), 22);
-            ServerNetManager.Instance.Regist(typeof(SPlayerReady), 23);
-            ServerNetManager.Instance.Regist(typeof(SGameReady), 25);
-            ServerNetManager.Instance.Regist(typeof(SGameStart), 26);
-            ServerNetManager.Instance.Regist(typeof(SPutShape), 27);
-            ServerNetManager.Instance.Regist(typeof(SRefreshHoleMap), 28);
-            ServerNetManager.Instance.Regist(typeof(SUseItem), 29);
-            ServerNetManager.Instance.Regist(typeof(SPlayerFailure), 30);
-            ServerNetManager.Instance.Regist(typeof(SPlayerLeave), 31);
-            ServerNetManager.Instance.Regist(typeof(SEatItems), 32);
-            ServerNetManager.Instance.Regist(typeof(SGameOver), 33);
-            ServerNetManager.Instance.Regist(typeof(SUnderAttack), 34);
-            ServerNetManager.Instance.Regist(typeof(SSetName), 35);
+
+            ServerNetManager.Instance.Regist(typeof(SEnter));
+            ServerNetManager.Instance.Regist(typeof(SAddPlayer));
+            ServerNetManager.Instance.Regist(typeof(SChangeTeam));
+            ServerNetManager.Instance.Regist(typeof(SPlayerReady));
+            ServerNetManager.Instance.Regist(typeof(SGameReady));
+            ServerNetManager.Instance.Regist(typeof(SGameStart));
+            ServerNetManager.Instance.Regist(typeof(SPutShape));
+            ServerNetManager.Instance.Regist(typeof(SRefreshHoleMap));
+            ServerNetManager.Instance.Regist(typeof(SUseItem));
+            ServerNetManager.Instance.Regist(typeof(SPlayerFailure));
+            ServerNetManager.Instance.Regist(typeof(SPlayerLeave));
+            ServerNetManager.Instance.Regist(typeof(SEatItems));
+            ServerNetManager.Instance.Regist(typeof(SGameOver));
+            ServerNetManager.Instance.Regist(typeof(SUnderAttack));
+            ServerNetManager.Instance.Regist(typeof(SSetName));
         }
     }
 }

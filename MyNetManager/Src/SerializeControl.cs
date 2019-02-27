@@ -34,15 +34,16 @@ namespace MyNetManager
         /// </summary>
         /// <param name="type"></param>
         /// <param name="typeId"></param>
-        internal void Regist(Type type, int typeId)
+        internal void Regist(Type type)
         {
+            int typeId = Utils.HashString(type.Name);
             if (!typeof(IProtocol).IsAssignableFrom(type))
             {
                 throw new RegistTypeException(type);
             }
             if (id2Type.ContainsKey(typeId))
             {
-                throw new TypeIdRepeatException(typeId);
+                throw new TypeIdRepeatException(typeId, type, id2Type[typeId]);
             }
 
             AddClass(type);

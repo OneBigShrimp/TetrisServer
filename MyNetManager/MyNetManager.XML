@@ -46,7 +46,7 @@
             客户端网络管理类
             </summary>
         </member>
-        <member name="M:MyNetManager.ClientNetManager.Regist(System.Type,System.Int32)">
+        <member name="M:MyNetManager.ClientNetManager.Regist(System.Type)">
             <summary>
             注册协议对象和Id,要保证和服务器注册的类型与Id匹配关系一致
             </summary>
@@ -81,7 +81,12 @@
             目前基本类型支持byte,int,float,string,自定义结构(实现ISerObj接口)和数组(内部可以放基本结构,也可以放自定义结构,暂不支持数组中放数组int[][]和多维数组int[,])
             </summary>  
         </member>
-        <member name="M:MyNetManager.SerializeControl.Regist(System.Type,System.Int32)">
+        <member name="F:MyNetManager.SerializeControl.SerializeBase.Field">
+            <summary>
+            需要被序列化的字段所在的属性,如果为null,则target就是要序列化的值
+            </summary>
+        </member>
+        <member name="M:MyNetManager.SerializeControl.Regist(System.Type)">
             <summary>
             注册类型和类型Id的对应关系
             </summary>
@@ -111,11 +116,6 @@
             添加需要被序列化的对象类型
             </summary>
             <param name="type"></param>
-        </member>
-        <member name="F:MyNetManager.SerializeControl.SerializeBase.Field">
-            <summary>
-            需要被序列化的字段所在的属性,如果为null,则target就是要序列化的值
-            </summary>
         </member>
         <member name="F:MyNetManager.NetExceptionType.Connect">
             <summary>
@@ -147,12 +147,6 @@
             反序列化异常
             </summary>
         </member>
-        <member name="M:MyNetManager.MyStream.ReCalculatePosition(System.Int32)">
-            <summary>
-            根据指定的增加长度重新计算Position
-            </summary>
-            <param name="addLength"></param>
-        </member>
         <member name="P:MyNetManager.MyStream.CanAnalyse">
             <summary>
             流是否可以用于解析(至少有一个类型(4字节)和长度标志位(4字节)才可以解析)
@@ -162,6 +156,12 @@
             <summary>
             流内剩余没有被解析的数据长度
             </summary>
+        </member>
+        <member name="M:MyNetManager.MyStream.ReCalculatePosition(System.Int32)">
+            <summary>
+            根据指定的增加长度重新计算Position
+            </summary>
+            <param name="addLength"></param>
         </member>
         <member name="F:MyNetManager.MyOctets.maxSize">
             <summary>
