@@ -1,3 +1,4 @@
 # TetrisServer
 1.MyNetManager项目和TetrisSupport项目是服务器客户端公用库,需要将这两个项目编译好的dll复制到TetrisClient中Assets的Plugins文件夹下
+
 2.TetrisServer项目是服务器窗口,设置好IP点击开服按钮等待客户端连接了
